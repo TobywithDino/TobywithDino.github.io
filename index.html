@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toby | TobywithDino</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome 6 Free -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- Floating cats background layer -->
+    <div id="cats-container" aria-hidden="true"></div>
+
+    <!-- ── Section 0: Weather & Location bar ── -->
+    <header class="weather-bar" id="weather-bar">
+      <span id="location-display">
+        <i class="fa-solid fa-location-dot"></i>
+        <span id="location-text">載入中…</span>
+      </span>
+      <span id="weather-display">
+        <span id="weather-icon">⏳</span>
+        <span id="weather-text">天氣載入中</span>
+      </span>
+      <span id="pop-display">
+        🌧 降雨機率 <span id="pop-value">--%</span>
+      </span>
+      <span id="temp-display">
+        🌡 <span id="temp-value">--</span>°C
+      </span>
+    </header>
+
+    <main>
+      <!-- ── Section 1: Hero ── -->
+      <section class="hero" id="hero">
+        <div class="avatar-wrapper">
+          <img
+            src="assets/avatar.jpg"
+            alt="Toby 的大頭貼"
+            class="avatar"
+            id="avatar-img"
+          />
+        </div>
+
+        <h1 class="hero-name">Toby</h1>
+
+        <p class="hero-bio">
+          我目前就讀中央大學資訊工程學系四年級，平時喜歡彈吉他、打排球，這是我最近新的 side project，做一個自我介紹的網站，請多多指教！
+        </p>
+
+        <!-- Social links -->
+        <nav class="social-links" aria-label="社群連結">
+          <a
+            href="https://www.instagram.com/toby.0928/?hl=zh-tw"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            class="social-btn"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a
+            href="https://github.com/TobywithDino"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            class="social-btn"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a
+            href="mailto:penguinoftoby@gmail.com"
+            aria-label="寄信給 Toby"
+            class="social-btn"
+          >
+            <i class="fa-solid fa-envelope"></i>
+          </a>
+        </nav>
+      </section>
+
+      <!-- ── Section 2: Project cards ── -->
+      <section class="projects" id="projects">
+        <h2 class="projects-title">My Projects</h2>
+        <div class="cards-grid">
+          <a href="./guitar/" class="card" aria-label="前往吉他應用頁面">
+            <span class="card-emoji">🎸</span>
+            <h3 class="card-title">Guitar</h3>
+            <p class="card-desc">吉他相關工具與應用</p>
+          </a>
+          <a href="./games/" class="card" aria-label="前往網頁遊戲頁面">
+            <span class="card-emoji">🎮</span>
+            <h3 class="card-title">Games</h3>
+            <p class="card-desc">個人開發的網頁遊戲</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2025 Toby · Built with ❤️ & GitHub Pages</p>
+    </footer>
+
+    <script type="module" src="weather.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
