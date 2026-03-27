@@ -87,10 +87,16 @@ function createCat() {
   el.style.animation = `${anim} ${duration}s ${delay}s ease-in-out infinite`;
 
   // Click → meow + bounce
-  el.addEventListener('click', () => {
+  el.addEventListener('click', (e) => {
+    e.stopPropagation();
     playMeow();
+    // Pause the float animation, play bounce, then restore
+    const currentAnim = el.style.animation;
     el.classList.add('bounce');
-    setTimeout(() => el.classList.remove('bounce'), 320);
+    setTimeout(() => {
+      el.classList.remove('bounce');
+      el.style.animation = currentAnim;
+    }, 370);
   });
 
   return el;
