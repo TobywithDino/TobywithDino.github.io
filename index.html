@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>與AI一起創作「精緻屍體」</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── LANDING ── -->
+<section id="landing">
+  <p class="museum-label">生成式 AI 的人文導論 · 期末專案</p>
+  <h1>與AI一起創作<br><em>「精緻屍體」</em></h1>
+  <p class="description">
+    精緻屍體（Exquisite Corpse）是超現實主義的集體創作遊戲。<br>
+    在這裡，AI將先畫出半幅作品，而你，只看得見接縫處。<br>
+    然後用你的手，完成這具未知的身體。
+  </p>
+  <button class="btn-start" id="btn-start">開始創作</button>
+</section>
+
+<!-- ── LOADING ── -->
+<section id="loading">
+  <p class="museum-label">AI 正在構思</p>
+  <div class="spinner"></div>
+  <p class="loading-text">
+    生成中<span class="loading-dots">
+      <span>.</span><span>.</span><span>.</span>
+    </span>
+  </p>
+</section>
+
+<!-- ── STUDIO ── -->
+<section id="studio">
+  <div class="studio-header">
+    <h2>接續創作</h2>
+    <p>AI 已完成上半部分 — 只有接縫處對你可見</p>
+  </div>
+
+  <div id="frame-wrapper">
+    <!-- AI hint strip: overflow:hidden clips to show only the seam edge -->
+    <div id="hint-clip">
+      <img id="ai-full" src="default.jpg" alt="" />
+    </div>
+    <div id="seam-line"></div>
+    <!-- User drawing canvas -->
+    <canvas id="draw-canvas" width="500" height="250"></canvas>
+  </div>
+
+  <div id="toolbar">
+    <div class="tool-group">
+      <span class="tool-label">顏色</span>
+      <input type="color" id="color-picker" value="#000000" />
+    </div>
+    <div class="tool-group">
+      <span class="tool-label">粗細</span>
+      <input type="range" id="brush-size" min="1" max="40" value="6" />
+    </div>
+    <button class="btn-tool active" id="btn-brush">筆刷</button>
+    <button class="btn-tool" id="btn-eraser">橡皮擦</button>
+    <button class="btn-tool" id="btn-clear">清除</button>
+  </div>
+
+  <button id="btn-confirm">完成創作</button>
+</section>
+
+<!-- ── RESULT ── -->
+<section id="result">
+  <p class="museum-label">精緻屍體 · 完成</p>
+  <h2>這是你們共同創造的作品</h2>
+  <canvas id="result-canvas"></canvas>
+  <div class="result-actions">
+    <button class="btn-secondary" id="btn-download">下載作品</button>
+    <button class="btn-secondary" id="btn-again">再創作一次</button>
+  </div>
+</section>
+
+<footer>Exquisite Corpse × Generative AI</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

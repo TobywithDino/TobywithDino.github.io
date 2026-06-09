@@ -1,0 +1,304 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #fff;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #111;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Landing ── */
+#landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.museum-label {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+h1 {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  max-width: 640px;
+}
+
+h1 em {
+  font-style: italic;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+.btn-start {
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  padding: 14px 48px;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-start:hover {
+  background: #111;
+  color: #fff;
+}
+
+/* ── Loading ── */
+#loading {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.loading-text {
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-top-color: #111;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-dots span {
+  animation: blink 1.2s infinite;
+  font-size: 1.2rem;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
+
+/* ── Studio ── */
+#studio {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 48px 24px 60px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.studio-header {
+  text-align: center;
+}
+
+.studio-header h2 {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.studio-header p {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #999;
+  letter-spacing: 0.06em;
+}
+
+/* ── Frame + Canvas ── */
+#frame-wrapper {
+  position: relative;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+}
+
+/* clip wrapper: shows only 12px (= HINT_H) of the image at the seam */
+#hint-clip {
+  width: 500px;
+  height: 12px; /* keep in sync with JS HINT_H = 12 */
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+#ai-full {
+  width: 500px;
+  display: block;
+  position: relative; /* top offset set by JS to show midpoint */
+}
+
+#draw-canvas {
+  display: block;
+  background: #fff;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* seam line */
+#seam-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ccc;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+/* ── Toolbar ── */
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tool-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+input[type=color] {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 1px;
+  cursor: pointer;
+  background: none;
+}
+
+input[type=range] {
+  width: 80px;
+  accent-color: #111;
+}
+
+.btn-tool {
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #333;
+  padding: 6px 16px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-tool:hover, .btn-tool.active {
+  border-color: #111;
+  color: #111;
+}
+
+/* ── Confirm ── */
+#btn-confirm {
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  padding: 13px 52px;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-top: 8px;
+}
+
+#btn-confirm:hover {
+  background: #111;
+  color: #fff;
+}
+
+/* ── Result ── */
+#result {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+#result h2 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#result-canvas {
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.1);
+}
+
+.result-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-secondary {
+  border: 1px solid #bbb;
+  background: transparent;
+  color: #555;
+  padding: 11px 32px;
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: #111;
+  color: #111;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 14px;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: #ccc;
+  text-transform: uppercase;
+}
