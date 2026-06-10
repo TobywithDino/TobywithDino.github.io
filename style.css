@@ -151,6 +151,9 @@ h1 em {
   width: 500px;
   display: block;
   position: relative; /* top offset set by JS to show midpoint */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 #draw-canvas {
