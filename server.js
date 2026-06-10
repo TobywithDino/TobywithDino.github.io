@@ -46,7 +46,7 @@ const STYLES = [
 app.post("/api/generate-image", async (req, res) => {
   try {
     const model = "black-forest-labs/flux-schnell";
-    const prompt = `${pick(SUBJECTS)}, full body, ${pick(MOODS)}, ${pick(STYLES)}, white background, hand-drawn, spontaneous marks, surrealist art`;
+    const prompt = `${pick(SUBJECTS)}, full body, ${pick(MOODS)}, ${pick(STYLES)}, pure white background with no scenery or environment, only the character or object, hand-drawn, spontaneous marks, surrealist art`;
 
     console.log("正在生成圖片...");
 
