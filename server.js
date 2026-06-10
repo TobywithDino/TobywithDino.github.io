@@ -30,8 +30,9 @@ app.post("/api/generate-image", async (req, res) => {
       }
     });
 
-    // output[0] 是 FileOutput 物件，.url 是 URL 物件，需轉字串
-    res.json({ imageUrl: output[0].url.toString() });
+    // output[0].url() 是 method，回傳 URL 物件，再用 .href 取字串
+    res.json({ imageUrl: output[0].url().href });
+    console.log("生成完畢!");
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI 圖片生成失敗" });
