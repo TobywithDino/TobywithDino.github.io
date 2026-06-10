@@ -49,6 +49,10 @@ btnStart.addEventListener('click', async () => {
     generatedImageUrl = 'default.jpg';
   }
 
+  // crossOrigin 只對外部 URL 設定，file:// 本地圖片設了會載入失敗
+  if (generatedImageUrl.startsWith('http')) {
+    aiFullImg.crossOrigin = 'anonymous';
+  }
   aiFullImg.src = generatedImageUrl;
   hide(loading);
   setupStudio();
@@ -167,13 +171,17 @@ function buildResult() {
   resultCanvas.width  = CANVAS_W;
   resultCanvas.height = AI_HALF_H + DRAW_H;
 
-  const img = new Image();
-  img.crossOrigin = 'anonymous'; // required for toDataURL() on external images
-  img.onload = () => {
-    rctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight / 2, 0, 0, CANVAS_W, AI_HALF_H);
+  // 直接用已載入的 aiFullImg，不重新 fetch，避免 crossOrigin 問題
+  function drawComposite() {
+    rctx.drawImage(aiFullImg, 0, 0, aiFullImg.naturalWidth, aiFullImg.naturalHeight / 2, 0, 0, CANVAS_W, AI_HALF_H);
     rctx.drawImage(drawCanvas, 0, AI_HALF_H);
-  };
-  img.src = generatedImageUrl;
+  }
+
+  if (aiFullImg.complete && aiFullImg.naturalWidth > 0) {
+    drawComposite();
+  } else {
+    aiFullImg.onload = drawComposite;
+  }
 }
 
 // ── Download ──
