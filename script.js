@@ -1,7 +1,9 @@
 const CANVAS_W = 500;
 const HINT_H   = 12;   // pixels of AI image shown at seam
 const DRAW_H   = 250;  // user drawing area height
+const API_URL = 'https://exquisite-corpse-with-genai.onrender.com/api/generate-image';
 
+let generatedImageUrl = 'default.jpg';
 let isEraser = false;
 let painting = false;
 let lastX = 0, lastY = 0;
@@ -33,16 +35,24 @@ function show(el) { el.style.display = 'flex'; }
 function hide(el) { el.style.display = 'none'; }
 
 // ── Landing → Loading → Studio ──
-btnStart.addEventListener('click', () => {
+btnStart.addEventListener('click', async () => {
   hide(landing);
   show(loading);
 
-  // Simulate AI generation delay (min 5s)
-  setTimeout(() => {
-    hide(loading);
-    setupStudio();
-    show(studio);
-  }, 5000);
+  try {
+    const res = await fetch(API_URL, { method: 'POST' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    generatedImageUrl = data.imageUrl;
+  } catch (err) {
+    console.warn('API 呼叫失敗，使用預設圖片:', err);
+    generatedImageUrl = 'default.jpg';
+  }
+
+  aiFullImg.src = generatedImageUrl;
+  hide(loading);
+  setupStudio();
+  show(studio);
 });
 
 function setupStudio() {
@@ -158,23 +168,12 @@ function buildResult() {
   resultCanvas.height = AI_HALF_H + DRAW_H;
 
   const img = new Image();
-  img.src = 'default.jpg';
+  img.crossOrigin = 'anonymous'; // required for toDataURL() on external images
   img.onload = () => {
-    rctx.drawImage(
-      img,
-      0, 0, img.naturalWidth, img.naturalHeight / 2,
-      0, 0, CANVAS_W, AI_HALF_H
-    );
+    rctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight / 2, 0, 0, CANVAS_W, AI_HALF_H);
     rctx.drawImage(drawCanvas, 0, AI_HALF_H);
   };
-  if (img.complete) {
-    rctx.drawImage(
-      img,
-      0, 0, img.naturalWidth, img.naturalHeight / 2,
-      0, 0, CANVAS_W, AI_HALF_H
-    );
-    rctx.drawImage(drawCanvas, 0, AI_HALF_H);
-  }
+  img.src = generatedImageUrl;
 }
 
 // ── Download ──

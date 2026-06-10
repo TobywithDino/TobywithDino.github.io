@@ -15,15 +15,10 @@ const replicate = new Replicate({
 });
 
 app.post("/api/generate-image", async (req, res) => {
-  const { userPrompt } = req.body;
-
   try {
-    // 這裡以熱門的 stability-ai/sdxl 為例
     const model = "stability-ai/sdxl:39ed52f2a78e434b49651cd99f9d84791e8141f54751373b190d56fae618ac00";
-    
-    // 嚴格控制提示詞，強制要求黑線白底
-    const finalPrompt = `${userPrompt}, minimal black ink line art, pure solid white background, coloring book page style, simple lineart, isolated`;
-    const negativePrompt = "color, shading, shadow, gradients, 3d, realistic, grey background, textured background";
+    const finalPrompt = "a whimsical surrealist creature or character, full body, hand-drawn sketch style, loose expressive brushstrokes, colored pencil illustration, watercolor accents, white background, spontaneous gestural marks, imaginative and playful";
+    const negativePrompt = "photo, realistic, 3d render, digital art, smooth gradients, dark background, text, watermark";
 
     console.log("正在生成圖片...");
     
@@ -31,15 +26,14 @@ app.post("/api/generate-image", async (req, res) => {
       input: {
         prompt: finalPrompt,
         negative_prompt: negativePrompt,
-        width: 512, // SDXL 支援 512x512
+        width: 512,
         height: 512,
         num_outputs: 1,
-        output_format: "png"
       }
     });
 
-    // output 通常是一個包含圖片網址的陣列，例如 ["https://replicate.delivery/..."]
-    res.json({ imageUrl: output[0] });
+    // 新版 SDK output[0] 是 FileOutput 物件，String() 統一轉成 URL 字串
+    res.json({ imageUrl: String(output[0]) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI 圖片生成失敗" });
@@ -47,5 +41,5 @@ app.post("/api/generate-image", async (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log("後端伺服器已啟動：http://localhost:3000");
+  console.log("後端伺服器已啟動");
 });
