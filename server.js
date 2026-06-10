@@ -16,24 +16,22 @@ const replicate = new Replicate({
 
 app.post("/api/generate-image", async (req, res) => {
   try {
-    const model = "stability-ai/sdxl:39ed52f2a78e434b49651cd99f9d84791e8141f54751373b190d56fae618ac00";
-    const finalPrompt = "a whimsical surrealist creature or character, full body, hand-drawn sketch style, loose expressive brushstrokes, colored pencil illustration, watercolor accents, white background, spontaneous gestural marks, imaginative and playful";
-    const negativePrompt = "photo, realistic, 3d render, digital art, smooth gradients, dark background, text, watermark";
+    const model = "black-forest-labs/flux-schnell";
+    const prompt = "a whimsical surrealist creature or character, full body, hand-drawn sketch style, loose expressive brushstrokes, colored pencil illustration, watercolor accents, white background, spontaneous gestural marks, imaginative and playful";
 
     console.log("正在生成圖片...");
-    
+
     const output = await replicate.run(model, {
       input: {
-        prompt: finalPrompt,
-        negative_prompt: negativePrompt,
-        width: 512,
-        height: 512,
+        prompt,
+        aspect_ratio: "1:1",
+        output_format: "png",
         num_outputs: 1,
       }
     });
 
-    // 新版 SDK output[0] 是 FileOutput 物件，String() 統一轉成 URL 字串
-    res.json({ imageUrl: String(output[0]) });
+    // output[0] 是 FileOutput 物件，.url 是 URL 物件，需轉字串
+    res.json({ imageUrl: output[0].url.toString() });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI 圖片生成失敗" });
