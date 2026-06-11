@@ -1,0 +1,18 @@
+# 套件依賴
+node_modules/
+
+# 環境變數（API 金鑰絕對不能上傳）
+.env
+.env.local
+.env.*.local
+
+# OS 暫存檔
+.DS_Store
+Thumbs.db
+
+# 編輯器設定
+.vscode/
+.idea/
+
+# 網頁檔案備份
+index_backup.html

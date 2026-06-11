@@ -1,9 +1,11 @@
 const CANVAS_W = 500;
 const HINT_H   = 12;   // pixels of AI image shown at seam
 const DRAW_H   = 250;  // user drawing area height
-const API_URL = 'https://exquisite-corpse-with-genai.onrender.com/api/generate-image';
+const API_BASE = 'https://exquisite-corpse-with-genai.onrender.com';
+const API_URL  = `${API_BASE}/api/generate-image`;
 
 let generatedImageUrl = 'default.jpg';
+let generatedPrompt   = '';
 let isEraser = false;
 let painting = false;
 let lastX = 0, lastY = 0;
@@ -44,6 +46,7 @@ btnStart.addEventListener('click', async () => {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     generatedImageUrl = data.imageUrl;
+    generatedPrompt   = data.prompt || '';
   } catch (err) {
     console.warn('API 呼叫失敗，使用預設圖片:', err);
     generatedImageUrl = 'default.jpg';
@@ -160,27 +163,44 @@ drawCanvas.addEventListener('touchmove',  paint,      { passive: false });
 drawCanvas.addEventListener('touchend',   stopPaint);
 
 // ── Confirm → Result ──
-btnConfirm.addEventListener('click', () => {
-  buildResult();
+btnConfirm.addEventListener('click', async () => {
+  await buildResult();
   hide(studio);
   show(result);
+  saveArtwork(); // 非同步儲存，不阻擋畫面切換
 });
 
 function buildResult() {
-  const AI_HALF_H = 250;
-  resultCanvas.width  = CANVAS_W;
-  resultCanvas.height = AI_HALF_H + DRAW_H;
+  return new Promise((resolve) => {
+    const AI_HALF_H = 250;
+    resultCanvas.width  = CANVAS_W;
+    resultCanvas.height = AI_HALF_H + DRAW_H;
 
-  // 直接用已載入的 aiFullImg，不重新 fetch，避免 crossOrigin 問題
-  function drawComposite() {
-    rctx.drawImage(aiFullImg, 0, 0, aiFullImg.naturalWidth, aiFullImg.naturalHeight / 2, 0, 0, CANVAS_W, AI_HALF_H);
-    rctx.drawImage(drawCanvas, 0, AI_HALF_H);
-  }
+    function drawComposite() {
+      rctx.drawImage(aiFullImg, 0, 0, aiFullImg.naturalWidth, aiFullImg.naturalHeight / 2, 0, 0, CANVAS_W, AI_HALF_H);
+      rctx.drawImage(drawCanvas, 0, AI_HALF_H);
+      resolve();
+    }
 
-  if (aiFullImg.complete && aiFullImg.naturalWidth > 0) {
-    drawComposite();
-  } else {
-    aiFullImg.onload = drawComposite;
+    if (aiFullImg.complete && aiFullImg.naturalWidth > 0) {
+      drawComposite();
+    } else {
+      aiFullImg.onload = drawComposite;
+    }
+  });
+}
+
+async function saveArtwork() {
+  try {
+    const imageData = resultCanvas.toDataURL('image/png');
+    await fetch(`${API_BASE}/api/save-artwork`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageData, prompt: generatedPrompt }),
+    });
+    console.log('作品已儲存');
+  } catch (err) {
+    console.warn('作品儲存失敗:', err);
   }
 }
 
@@ -199,3 +219,42 @@ btnAgain.addEventListener('click', () => {
   hide(result);
   show(landing);
 });
+
+// ── Gallery ──
+const GALLERY_FALLBACK = ['example1.png', 'example2.png'];
+
+function setupGallery(images) {
+  const leftTrack  = document.getElementById('gallery-left');
+  const rightTrack = document.getElementById('gallery-right');
+  leftTrack.innerHTML = '';
+  rightTrack.innerHTML = '';
+
+  // 至少重複到 8 張以上，確保欄位夠高不出現空白，再×2 做無縫循環
+  const MIN = 8;
+  let padded = [...images];
+  while (padded.length < MIN) padded = [...padded, ...images];
+  [...padded, ...padded].forEach(src => {
+    [leftTrack, rightTrack].forEach(track => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = '';
+      track.appendChild(img);
+    });
+  });
+}
+
+async function loadGallery() {
+  try {
+    const res = await fetch(`${API_BASE}/api/gallery`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const urls = data.length > 0
+      ? data.map(item => item.image_url)
+      : GALLERY_FALLBACK;
+    setupGallery(urls);
+  } catch {
+    setupGallery(GALLERY_FALLBACK);
+  }
+}
+
+loadGallery();
