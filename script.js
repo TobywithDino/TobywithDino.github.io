@@ -9,6 +9,8 @@ let generatedPrompt   = '';
 let isEraser = false;
 let painting = false;
 let lastX = 0, lastY = 0;
+const history = [];
+const HISTORY_LIMIT = 20;
 
 // ── Elements ──
 const landing    = document.getElementById('landing');
@@ -27,6 +29,7 @@ const colorPicker = document.getElementById('color-picker');
 const brushSize   = document.getElementById('brush-size');
 const btnBrush    = document.getElementById('btn-brush');
 const btnEraser   = document.getElementById('btn-eraser');
+const btnUndo     = document.getElementById('btn-undo');
 const btnClear    = document.getElementById('btn-clear');
 const btnConfirm  = document.getElementById('btn-confirm');
 const btnDownload = document.getElementById('btn-download');
@@ -67,10 +70,12 @@ function setupStudio() {
   seamLine.style.top = HINT_H + 'px';
 
   // Set up drawing canvas
+  history.length = 0;
   drawCanvas.width  = CANVAS_W;
   drawCanvas.height = DRAW_H;
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, CANVAS_W, DRAW_H);
+  saveHistory();
 
   // Position the full img so its vertical midpoint aligns with
   // the bottom edge of hint-clip — showing the bottom of the top half
@@ -106,9 +111,19 @@ btnEraser.addEventListener('click', () => {
   drawCanvas.style.cursor = 'cell';
 });
 
+btnUndo.addEventListener('click', undo);
+
 btnClear.addEventListener('click', () => {
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, CANVAS_W, DRAW_H);
+  saveHistory();
+});
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    e.preventDefault();
+    undo();
+  }
 });
 
 // ── Drawing ──
@@ -152,7 +167,21 @@ function paint(e) {
   lastY = pos.y;
 }
 
-function stopPaint() { painting = false; }
+function stopPaint() {
+  if (painting) saveHistory();
+  painting = false;
+}
+
+function saveHistory() {
+  history.push(ctx.getImageData(0, 0, CANVAS_W, DRAW_H));
+  if (history.length > HISTORY_LIMIT) history.shift();
+}
+
+function undo() {
+  if (history.length <= 1) return; // 保留初始空白狀態
+  history.pop();
+  ctx.putImageData(history[history.length - 1], 0, 0);
+}
 
 drawCanvas.addEventListener('mousedown',  startPaint);
 drawCanvas.addEventListener('mousemove',  paint);

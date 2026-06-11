@@ -248,6 +248,14 @@ input[type=range] {
   color: #fff;
 }
 
+.confirm-note {
+  font-size: 0.75rem;
+  color: #aaa;
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* ── Result ── */
 #result {
   display: none;
