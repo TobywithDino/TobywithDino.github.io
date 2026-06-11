@@ -314,6 +314,76 @@ footer {
   text-transform: uppercase;
 }
 
+/* ── Reflection overlay ── */
+#reflection-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.96);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+#reflection-overlay.visible {
+  opacity: 1;
+}
+
+#btn-close-reflection {
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+#btn-close-reflection:hover {
+  color: #111;
+}
+
+.reflection-content {
+  max-width: 560px;
+  padding: 60px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.reflection-text {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.reflection-text p {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 2;
+  font-family: 'Georgia', serif;
+}
+
+.reflection-text em {
+  font-style: italic;
+  color: #111;
+}
+
+.reflection-closing {
+  font-size: 0.9rem !important;
+  color: #888 !important;
+  text-align: center !important;
+  letter-spacing: 0.06em;
+  margin-top: 12px;
+}
+
 /* ── Gallery columns ── */
 .gallery-col {
   position: fixed;

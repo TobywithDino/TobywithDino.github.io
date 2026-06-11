@@ -33,7 +33,10 @@ const btnUndo     = document.getElementById('btn-undo');
 const btnClear    = document.getElementById('btn-clear');
 const btnConfirm  = document.getElementById('btn-confirm');
 const btnDownload = document.getElementById('btn-download');
-const btnAgain    = document.getElementById('btn-again');
+const btnAgain          = document.getElementById('btn-again');
+const btnReflection     = document.getElementById('btn-reflection');
+const reflectionOverlay = document.getElementById('reflection-overlay');
+const btnCloseReflection = document.getElementById('btn-close-reflection');
 
 // ── Transitions ──
 function show(el) { el.style.display = 'flex'; }
@@ -244,6 +247,19 @@ btnDownload.addEventListener('click', () => {
   link.download = 'exquisite-corpse.png';
   link.href = resultCanvas.toDataURL('image/png');
   link.click();
+});
+
+// ── Reflection ──
+btnReflection.addEventListener('click', () => {
+  reflectionOverlay.style.display = 'flex';
+  requestAnimationFrame(() => reflectionOverlay.classList.add('visible'));
+});
+
+btnCloseReflection.addEventListener('click', () => {
+  reflectionOverlay.classList.remove('visible');
+  reflectionOverlay.addEventListener('transitionend', () => {
+    reflectionOverlay.style.display = 'none';
+  }, { once: true });
 });
 
 // ── Again ──
