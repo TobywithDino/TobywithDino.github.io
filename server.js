@@ -18,7 +18,9 @@ const replicate = new Replicate({
 // 初始化 Supabase 客户端
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: { autoRefreshToken: false, persistSession: false }
+});
 
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -107,7 +109,7 @@ app.post("/api/save-artwork", async (req, res) => {
     res.json({ success: true, imageUrl: publicUrl });
   } catch (error) {
     console.error("儲存失敗:", error);
-    res.status(500).json({ error: "作品儲存失敗" });
+    res.status(500).json({ error: "作品儲存失敗", detail: error.message });
   }
 });
 

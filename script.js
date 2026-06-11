@@ -193,14 +193,19 @@ function buildResult() {
 async function saveArtwork() {
   try {
     const imageData = resultCanvas.toDataURL('image/png');
-    await fetch(`${API_BASE}/api/save-artwork`, {
+    const res = await fetch(`${API_BASE}/api/save-artwork`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ imageData, prompt: generatedPrompt }),
     });
-    console.log('作品已儲存');
+    const data = await res.json();
+    if (!res.ok) {
+      console.error('作品儲存失敗:', data.error, data.detail);
+    } else {
+      console.log('作品已儲存:', data.imageUrl);
+    }
   } catch (err) {
-    console.warn('作品儲存失敗:', err);
+    console.warn('作品儲存失敗 (網路錯誤):', err);
   }
 }
 
