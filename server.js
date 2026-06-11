@@ -62,7 +62,7 @@ const PALETTES = [
   "in pastel colors",
 ];
 
-const STYLE = "MS Paint style digital drawing, crude mouse-drawn strokes, flat solid colors, digital doodle, jagged pixelated lines, no shading or gradients, childlike lo-fi digital art";
+const STYLE = "MS Paint style digital drawing, crude mouse-drawn strokes, flat solid colors, digital doodle, jagged pixelated lines";
 
 app.post("/api/generate-image", async (req, res) => {
   try {
