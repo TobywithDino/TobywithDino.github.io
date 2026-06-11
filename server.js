@@ -31,6 +31,9 @@ const SUBJECTS = [
   "a fantastical being",
   "a surrealist animal",
   "a dreamlike character",
+  "a surrealist vehicle",
+  "a bizarre piece of furniture",
+  "a surrealist mountain",
 ];
 
 const MOODS = [
@@ -42,19 +45,29 @@ const MOODS = [
   "wild and frenzied",
 ];
 
-const STYLES = [
-  "colored pencil illustration",
-  "loose ink and watercolor",
-  "expressive oil pastel",
-  "gestural gouache painting",
-  "rough charcoal sketch with color washes",
-  "naive folk art style",
+const ACTIONS = [
+  "standing still",
+  "falling",
+  "floating in mid-air",
+  "melting",
+  "spinning",
+  "sleeping",
 ];
+
+const PALETTES = [
+  "using only primary colors",
+  "in muted earth tones",
+  "in neon colors",
+  "in black and white only",
+  "in pastel colors",
+];
+
+const STYLE = "MS Paint style digital drawing, crude mouse-drawn strokes, flat solid colors, digital doodle, jagged pixelated lines, no shading or gradients, childlike lo-fi digital art";
 
 app.post("/api/generate-image", async (req, res) => {
   try {
     const model = "black-forest-labs/flux-schnell";
-    const prompt = `${pick(SUBJECTS)}, full body, ${pick(MOODS)}, ${pick(STYLES)}, pure white background with no scenery or environment, only the character or object, hand-drawn, spontaneous marks, surrealist art`;
+    const prompt = `${pick(SUBJECTS)}, ${pick(ACTIONS)}, ${pick(MOODS)}, ${pick(PALETTES)}, ${STYLE}, pure white background, only the subject with no scenery`;
 
     console.log("正在生成圖片...");
 
