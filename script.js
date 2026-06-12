@@ -295,7 +295,7 @@ function setupGallery(images) {
 
 async function loadGallery() {
   try {
-    const res = await fetch(`${API_BASE}/api/gallery`);
+    const res = await fetch(`${API_BASE}/api/gallery?n=10`);
     if (!res.ok) throw new Error();
     const data = await res.json();
     const urls = data.length > 0

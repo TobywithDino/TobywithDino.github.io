@@ -126,23 +126,13 @@ app.post("/api/save-artwork", async (req, res) => {
   }
 });
 
-// ── 讀取畫廊圖片（隨機 10 張）──
+// ── 讀取畫廊圖片（隨機 n 張）──
 app.get("/api/gallery", async (req, res) => {
+  const n = parseInt(req.query.n) || 10;
   try {
-    // 取最新 50 筆，在 server 端打亂後取 10 張
-    const { data, error } = await supabase
-      .from('artworks')
-      .select('image_url, prompt')
-      .order('created_at', { ascending: false })
-      .limit(50);
-
+    const { data, error } = await supabase.rpc('get_random_artworks', { n });
     if (error) throw error;
-
-    const shuffled = (data || [])
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 10);
-
-    res.json(shuffled);
+    res.json(data || []);
   } catch (error) {
     console.error("畫廊讀取失敗:", error);
     res.status(500).json({ error: "畫廊讀取失敗" });
