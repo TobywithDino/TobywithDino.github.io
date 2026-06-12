@@ -130,9 +130,16 @@ app.post("/api/save-artwork", async (req, res) => {
 app.get("/api/gallery", async (req, res) => {
   const n = parseInt(req.query.n) || 10;
   try {
-    const { data, error } = await supabase.rpc('get_random_artworks', { n });
+    // 不指定排序，走 primary key index，速度最快
+    const { data, error } = await supabase
+      .from('artworks')
+      .select('image_url, prompt')
+      .limit(200);
+
     if (error) throw error;
-    res.json(data || []);
+
+    const shuffled = (data || []).sort(() => Math.random() - 0.5).slice(0, n);
+    res.json(shuffled);
   } catch (error) {
     console.error("畫廊讀取失敗:", error);
     res.status(500).json({ error: "畫廊讀取失敗" });
